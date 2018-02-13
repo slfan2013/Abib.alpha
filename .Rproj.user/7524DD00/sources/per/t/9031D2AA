@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1516644158676.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2260513417",
+    "id" : "9031D2AA",
+    "lastKnownWriteTime" : 1518469028,
+    "last_content_update" : 1518469028,
+    "path" : "~/Github/Abib.alpha/R/fold_change.R",
+    "project_path" : "R/fold_change.R",
+    "properties" : {
+        "cursorPosition" : "83,34",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

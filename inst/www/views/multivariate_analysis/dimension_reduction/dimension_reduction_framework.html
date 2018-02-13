@@ -1,0 +1,281 @@
+<div class="wrapper wrapper-content animated fadeInRight" ng-controller="dimension_reductionCtrl">
+  <div class="row">
+    <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Input for <span>{{$state.current.data.module_name}}</span></h5>
+                    <div ibox-tools></div>
+                </div>
+                <div class="ibox-content">
+                  <form name="input">
+                      <div layout="row">
+                        <md-input-container>
+                        <label>Data Set</label>
+                        <md-select placeholder="select a data set" ng-model="expression_id" ng-change="change_expression_id()" style="min-width: 200px;" name="expression_id" required="">
+                            <md-option ng-repeat="expression_id_option in expression_id_options" value="{{expression_id_option.expression_id}}" ng-init="index = $index">{{expression_id_option.expression_text}}
+                              <md-button class="md-icon-button" aria-label="Settings" ng-click="see_data_node(index)">
+                                <i class="fa fa-question-circle"></i>
+                              </md-button>
+                            </md-option>
+                        </md-select>
+                            <div ng-messages="input.expression_id.$error">
+                              <div ng-message="required">This is required.</div>
+                            </div>
+                        </md-input-container>
+                      </div>
+                      <div layout="row">
+                       <md-input-container>
+                          <label>Scaling method</label>
+                          <md-select placeholder="select a scale method" ng-model="scaleC" style="min-width: 200px;" name="scaleC" required="">
+                              <md-option ng-repeat="scale_option in scale_options" value="{{scale_option.value}}">{{scale_option.text}}</md-option>
+                          </md-select>
+                              <div ng-messages="input.expression_id.$error">
+                                <div ng-message="required">This is required.</div>
+                              </div>
+                          </md-input-container>
+                      </div>
+
+                      <div layout="row">
+                          <md-input-container style="min-width: 150px;" ng-show="$state.current.data.module_name==='PLS'">
+                          <label>Response</label>
+                          <md-select ng-model="response">
+                            <md-option ng-repeat="res in responses" value="{{res}}">{{res}}</md-option>
+                          </md-select>
+                        </md-input-container>
+                      </div>
+                      <div layout="row">
+                        <md-input-container ng-show="$state.current.data.module_name==='PLS'" style="min-width: 150px;">
+                          <label>Number of permutations</label>
+                          <input type="number" step='20' ng-model="permI" min="40" max="300">
+                        </md-input-container>
+                      </div>
+
+                      <div layout="row">
+                       <md-input-container>
+                          <label>Algorithm</label>
+                          <md-select placeholder="select a calculating algorithm" ng-model="algoC" style="min-width: 200px;" name="algoC" required="">
+                              <md-option ng-repeat="algoC_option in algoC_options" value="{{algoC_option.value}}">{{algoC_option.text}}</md-option>
+                          </md-select>
+                              <div ng-messages="input.expression_id.$error">
+                                <div ng-message="required">This is required.</div>
+                              </div>
+                          </md-input-container>
+                      </div>
+
+
+                      <div>
+                      <md-button  type="submit" class="md-raised md-primary" ng-click="submit($state.current.data.function_name)" ng-disabled="calculating"><span ng-hide="calculating">Submit</span><i class="fa fa-spinner fa-spin" ng-show="calculating"></i></md-button>
+
+                        <div ui-view></div>
+                      </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+      <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Report</h5>
+                    <div ibox-tools></div>
+                </div>
+                <div class="ibox-content" style='max-height:500px'>
+                  <p>{{report_text}}</p>
+                </div>
+            </div>
+        </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Graph</h5>
+                    <div ibox-tools></div>
+                </div>
+                <div class="ibox-content" ng-show='analysis_finished'>
+                  <md-content class='white-bg'>
+                    <md-tabs md-dynamic-height="" md-border-bottom="">
+                      <md-tab label="Score Plot">
+                        <md-content class="md-padding white-bg">
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="row">
+                                <md-input-container style="margin-right: 10px;" flex-gt-md="15" flex="30" >
+                                  <label>x axis</label>
+                                  <md-select ng-model="plot_parameter.pcx">
+                                    <md-option ng-repeat="pcx_option in plot_parameter.pcx_options" value="{{pcx_option.value}}">{{pcx_option.text}}</md-option>
+                                  </md-select>
+                                </md-input-container>
+                                <md-input-container style="margin-right: 10px;" flex-gt-md="15" flex="30" >
+                                  <label>y axis</label>
+                                  <md-select ng-model="plot_parameter.pcy">
+                                    <md-option ng-repeat="pcy_option in plot_parameter.pcy_options" value="{{pcy_option.value}}">{{pcy_option.text}}</md-option>
+                                  </md-select>
+                                </md-input-container>
+                              </div><br />
+                              <!--<div class="row">
+                                    <md-checkbox ng-model="plot_parameter.use_color" aria-label="User Color to visualize" class="md-primary">
+                                      Use color?
+                                    </md-checkbox>
+                              </div>-->
+                               <!--<div class="row" ng-show="plot_parameter.use_color">-->
+                                  <md-input-container style="min-width: 150px;">
+                                    <label>Coloring Column</label>
+                                    <md-select ng-model="plot_parameter.color_group_name" name="color_group_name">
+                                      <md-option ng-repeat="color_group_name_option in plot_parameter.color_group_name_options" value="{{color_group_name_option}}">{{color_group_name_option}}</md-option>
+                                    </md-select>
+                                  </md-input-container>
+                                    <!--<div layout="row" layout-wrap="">
+                                      <md-button ng-repeat="color_levels_option in plot_parameter.color_levels_options" flex-gt-md="15" flex="30" style="color:{{plot_parameter.selected_colors[$index]}}"  ng-click="change_color(plot_parameter.selected_colors[$index], $index)">
+                                        {{color_levels_option}}
+                                      </md-button>
+                                    </div>-->
+                               <!--</div><hr>-->
+                              <div class="row">
+                                    <md-checkbox ng-model="plot_parameter.use_label" aria-label="User Color to visualize" class="md-primary">
+                                      Use label?
+                                    </md-checkbox>
+                              </div>
+                               <div class="row" ng-show="plot_parameter.use_label">
+                                  <md-input-container style="min-width: 150px;">
+                                    <label>Label each point by</label>
+                                    <md-select ng-model="plot_parameter.label_group_name" name="label_group_name" required="">
+                                      <md-option ng-repeat="label_group_name_option in plot_parameter.label_group_name_options" value="{{label_group_name_option}}">{{label_group_name_option}}</md-option>
+                                    </md-select>
+                                  </md-input-container>
+                               </div><br />
+                              <!--<div class="row">
+                                  <md-checkbox ng-model="use_ellipse" aria-label="Add 95% confidence region" class="md-primary" ng-disabled = "updating_ellipse">
+                                    Add 95% confidence region?
+                                  </md-checkbox>
+                                  <p class="text-warning" ng-show="plot_parameter.use_ellipse">Please note, the ellipse won't be able to show on the plot but will be added to the plot saved to the database.</p>
+                              </div>
+                              <div class="row">
+                                  <md-checkbox ng-model="plot_parameter.other_setting" aria-label="Graph related setting" class="md-primary">
+                                    Additional settings
+                                  </md-checkbox>
+                              </div>-->
+                              <div class="row">
+                                 <md-slider-container>
+                                  <span>width</span>
+                                  <md-slider flex="" min="300" max="1200" ng-model="plot_parameter.width" aria-label="width" id="width_slider">
+                                  </md-slider>
+                                  <md-input-container>
+                                    <input flex="" type="number" ng-model="plot_parameter.width" aria-label="width" aria-controls="width_slider">
+                                  </md-input-container>
+                                </md-slider-container>
+                                 <md-slider-container>
+                                  <span>height</span>
+                                  <md-slider flex="" min="300" max="1200" ng-model="plot_parameter.height" aria-label="height" id="height_slider">
+                                  </md-slider>
+                                  <md-input-container>
+                                    <input flex="" type="number" ng-model="plot_parameter.height" aria-label="height" aria-controls="height_slider">
+                                  </md-input-container>
+                                </md-slider-container>
+                                <md-slider-container>
+                                  <span>scatter size</span>
+                                  <md-slider flex="" min="3" max="50" ng-model="plot_parameter.size" aria-label="size" id="size_slider" class="md-primary">
+                                  </md-slider>
+                                  <md-input-container>
+                                    <input flex="" type="number" ng-model="plot_parameter.size" aria-label="size" aria-controls="size_slider">
+                                  </md-input-container>
+                                </md-slider-container>
+                              </div>
+
+
+
+                            </div>
+                            <div class="col-md-8" layout-align="center center">
+                                <div id="score_plot"></div>
+                            </div>
+                          </div>
+                        </md-content>
+                      </md-tab>
+                      <md-tab label="Loading Plot">
+                        <md-content class="md-padding white-bg">
+                          <div class='row'>
+                            <div class="col-lg-4">
+                               <md-input-container style="margin-right: 10px;" flex-gt-md="15" flex="30" >
+                                  <label>x axis</label>
+                                  <md-select ng-model="loadings_plot_parameter.pcx">
+                                    <md-option ng-repeat="pcx_option in plot_parameter.pcx_options" value="{{pcx_option.value}}">{{pcx_option.text}}</md-option>
+                                  </md-select>
+                                </md-input-container>
+                                <md-input-container style="margin-right: 10px;" flex-gt-md="15" flex="30" >
+                                  <label>y axis</label>
+                                  <md-select ng-model="loadings_plot_parameter.pcy">
+                                    <md-option ng-repeat="pcy_option in plot_parameter.pcy_options" value="{{pcy_option.value}}">{{pcy_option.text}}</md-option>
+                                  </md-select>
+                                </md-input-container><br />
+                                <md-checkbox ng-model="loadings_plot_parameter.showlabel" class="md-primary">
+                                  add labels?
+                                </md-checkbox><br />
+                                width: <input ng-model="loadings_plot_parameter.width" type="number"><br />
+                                height: <input ng-model="loadings_plot_parameter.height" type="number">
+                            </div>
+                            <div class="col-lg-8">
+                              <div id="loading_plot"></div>
+                            </div>
+                          </div>
+                        </md-content>
+                      </md-tab>
+                      <md-tab label="VIP Score">
+                        <md-content class="md-padding white-bg">
+                          <div class="row"  ng-show="$state.current.data.module_name==='PLS'">
+                            <div class="col-lg-4">
+                              Show top <input ng-model="vip_score_plot_parameters.num_to_show" type="number"> compounds.<br />
+                              width: <input ng-model="vip_score_plot_parameters.width" type="number"><br />
+                              height: <input ng-model="vip_score_plot_parameters.height" type="number"><br />
+                            </div>
+                            <div class="col-lg-8">
+                              <div id="vip_plot"></div>
+                            </div>
+
+                          </div>
+                          <div ng-hide="$state.current.data.module_name==='PLS'">
+                            VIP score only available for partial least square analysis.
+                          </div>
+                        </md-content>
+                      </md-tab>
+                      <md-tab label="permutation test">
+                        <md-content class="md-padding white-bg">
+                          <div class="row"  ng-show="$state.current.data.module_name==='PLS'">
+                            <div class="col-lg-4">
+                              width: <input ng-model="permutation_plot_parameters.width" type="number"><br />
+                              height: <input ng-model="permutation_plot_parameters.height" type="number"><br />
+                            </div>
+                            <div class="col-lg-8">
+                              <div id="permutation_plot"></div>
+                            </div>
+
+                          </div>
+                          <div ng-hide="$state.current.data.module_name==='PLS'">
+                            Permutation test only available for partial least square analysis.
+                          </div>
+                        </md-content>
+                      </md-tab>
+                    </md-tabs>
+                  </md-content>
+                  <md-button type="submit" class="md-raised md-primary" ng-click="save_result()" ng-show="show_save_result && !calculating" ng-disabled="saving">Save the result</md-button>
+              </div>
+            </div>
+
+
+        </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Binded Data</h5>
+                    <div ibox-tools></div>
+                </div>
+                <div class="ibox-content">
+                  <dtable ng-if="selected_sample_data_ready" options="selected_binded_table_options" rows="selected_sample_data"  class="material" style="min-height:500px;"></dtable>
+                  <p ng-show="!selected_sample_data_ready">No point is selected.</p>
+                </div>
+      </div>
+    </div>
+  </div>
+
+</div>

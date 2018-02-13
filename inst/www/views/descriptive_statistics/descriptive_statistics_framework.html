@@ -1,0 +1,107 @@
+<div ng-controller="descriptive_statistics_controller">
+  <div class="row">
+    <div class='col-lg-4'>
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Input file for <span>{{$state.current.data.module_name}}</span></h5>
+          <div ibox-tools></div>
+        </div>
+        <div class="ibox-content">
+          <div layout="row">
+            <md-input-container>
+            <label>Select Data for transformation</label>
+            <md-select placeholder="select a data set" ng-model="expression_id" ng-change="change_expression_id()" style="min-width: 200px;" name="expression_id" required="">
+                <md-option ng-repeat="expression_id_option in expression_id_options" value="{{expression_id_option.expression_id}}" ng-init="index = $index">{{expression_id_option.expression_text}}
+                  <md-button class="md-icon-button" aria-label="Settings" ng-click="see_data_node(index)">
+                    <i class="fa fa-question-circle"></i>
+                  </md-button>
+                </md-option>
+            </md-select>
+                <div ng-messages="input.expression_id.$error">
+                  <div ng-message="required">This is required.</div>
+                </div>
+            </md-input-container>
+          </div>
+          <div flex-gt-sm="50">
+              <md-checkbox md-no-ink="" aria-label="two_factor" ng-model="two_factor" class="md-primary">
+                two way fold change?
+              </md-checkbox>
+          </div>
+          <div layout='row'>
+            <md-input-container style="min-width: 150px;">
+              <label>Main factor</label>
+              <md-select ng-model="factor1" name="factor1">
+                <md-option ng-repeat="factor1_option in factor1_options" value="{{factor1_option}}">{{factor1_option}}</md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container>
+              <label>Levels</label>
+              <md-select ng-model="levels1" multiple="">
+                  <md-option value="{{levels1_option}}" ng-repeat="levels1_option in levels1_options">{{levels1_option}}</md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+          <div layout='row' ng-show="two_factor">
+            <md-input-container style="min-width: 150px;">
+              <label>Secondary factor</label>
+              <md-select ng-model="factor2" name="factor2">
+                <md-option ng-repeat="factor2_option in factor2_options" value="{{factor2_option}}">{{factor2_option}}</md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container>
+              <label>Levels2</label>
+              <md-select ng-model="levels2" multiple="">
+                  <md-option value="{{levels2_option}}" ng-repeat="levels2_option in levels2_options">{{levels2_option}}</md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+          <md-input-container style="min-width: 150px;">
+              <label>Method</label>
+              <md-select ng-model="method" name="method">
+                <md-option value="mean">mean</md-option>
+                <md-option value="median">median</md-option>
+              </md-select>
+            </md-input-container><br />
+
+
+
+      <md-button type="submit" class="md-raised md-primary" ng-click="submit($state.current.data.function_name)" ng-disabled="calculating"><span ng-hide="calculating">Submit</span><i class="fa fa-spinner fa-spin" ng-show="calculating"></i></md-button>
+      <md-button type="submit" class="md-raised md-primary" ng-click="save_result()" ng-disabled="saving" ng-show="show_save_result && !calculating" >Save result</md-button>
+        </div>
+      </div>
+
+
+
+    </div>
+    <div class='col-lg-8'>
+<div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Output Table</h5>
+          <div>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <p ng-show="!table_ready">no output yet.</p>
+         <dtable ng-if="table_ready" options="table_options" rows="table_data"  class="material" style="min-height:300px;"></dtable>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

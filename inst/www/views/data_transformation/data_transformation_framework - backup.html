@@ -1,0 +1,130 @@
+<div ng-controller="data_transformation_controller">
+  <div class="row">
+    <div class='col-lg-4'>
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Input file for <span>{{$state.current.data.module_name}}</span></h5>
+          <div ibox-tools></div>
+        </div>
+        <div class="ibox-content">
+          <div layout="row">
+            <md-input-container>
+            <label>Select Data for transformation</label>
+            <md-select placeholder="select a data set" ng-model="expression_id" ng-change="change_expression_id()" style="min-width: 200px;" name="expression_id" required="">
+                <md-option ng-repeat="expression_id_option in expression_id_options" value="{{expression_id_option.expression_id}}" ng-init="index = $index">{{expression_id_option.expression_text}}
+                  <md-button class="md-icon-button" aria-label="Settings" ng-click="see_data_node(index)">
+                    <i class="fa fa-question-circle"></i>
+                  </md-button>
+                </md-option>
+            </md-select>
+                <div ng-messages="input.expression_id.$error">
+                  <div ng-message="required">This is required.</div>
+                </div>
+            </md-input-container>
+          </div>
+
+
+        <div layout='row'>
+          <md-input-container class="md-block" ng-show = "$state.current.data.function_name == 'log_transformation'" style="min-width: 200px;" >
+            <label>log base</label>
+            <input type="number" step="1" ng-model="log_base" min="1" max="20">
+          </md-input-container>
+        </div>
+
+        <div layout='row'>
+          <md-input-container class="md-block" ng-show = "$state.current.data.function_name == 'power_transformation'" style="min-width: 200px;" >
+            <label>power base</label>
+            <input type="number" step="0.1" ng-model="power_base" min="0" max="3">
+          </md-input-container>
+        </div>
+
+        <div flex-gt-sm="50">
+          <md-checkbox md-no-ink="" aria-label="Checkbox No Ink" ng-model="check_normality" class="md-primary">
+            Check for Normality
+          </md-checkbox>
+        </div>
+        <div flex-gt-sm="50">
+          <md-checkbox md-no-ink="" aria-label="Checkbox No Ink" ng-model="use_pca" class="md-primary">
+            Visualize with PCA
+          </md-checkbox>
+        </div>
+
+        </div>
+      </div>
+
+      <md-button type="submit" class="md-raised md-primary" ng-click="submit($state.current.data.function_name)" ng-disabled="calculating"><span ng-hide="calculating">Submit</span><i class="fa fa-spinner fa-spin" ng-show="calculating"></i></md-button>
+      <md-button type="submit" class="md-raised md-primary" ng-click="save_result()" ng-show = "show_save" ng-disabled="saving">Save result</md-button>
+
+    </div>
+    <div class='col-lg-8'>
+<div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>Output table</h5>
+          <div>
+            <div class="ibox-tools dropdown" uib-dropdown="">
+            <a ng-click="refresh_table()" > <i class="fa fa-refresh"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <dtable ng-if="table_ready" options="table_options" rows="table_data"  class="material" selected="table_selected" style="min-height:550px;"></dtable>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='row'>
+    <div class="col-lg-12">
+        <md-content class='white-bg'>
+          <md-tabs md-dynamic-height="" md-border-bottom="">
+            <md-tab label="Normality Check" ng-if="normality_check_ready && check_normality">
+              <md-content class="md-padding white-bg">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <p>Before transformation, there were {{before_num_normality}} compounds normally distributed.</p>
+                    <p>After transformation, there are {{after_num_normality}} compounds normally distributed. </p>
+                    <p>In total, there were {{improved_normality}} compounds got improved, but {{worsen_normality}} got worse.</p>
+                    <p>On the left parallel coordinate plot, the red lines represent the compounds got worsed, while the green ones got better. Hover lines for the name of the compound.</p>
+                  </div>
+                  <div class='col-lg-6'>
+                    <div id="normality_check_plot"></div>
+                  </div>
+                </div>
+              </md-content>
+            </md-tab>
+            <md-tab label="Principal Component Analysis" ng-if="pca_ready && use_pca">
+              <md-content class="md-padding white-bg">
+                <div class="row">
+                  <div class='col-lg-2'>
+                    <md-button class="md-raised" ng-click='toggle_pca_button_text()'>{{pca_button_text}}</md-button>
+                  </div>
+                  <div class="col-lg-5">
+                    <div id='before_pca'></div>
+                  </div>
+                  <div class="col-lg-5">
+                    <div id='after_pca'></div>
+                  </div>
+                </div>
+              </md-content>
+            </md-tab>
+          </md-tabs>
+        </md-content>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

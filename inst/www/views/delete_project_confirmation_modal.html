@@ -1,0 +1,12 @@
+<div class="inmodal">
+    <div class="modal-header">
+        <h4 class="modal-title">Are you sure to delte project: {{project_name}}?</h4>
+    </div>
+    <div class="modal-body">
+        <p class="text-danger">You won't be able to recover it if you delete the project.</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-white" ng-click="cancel()">No, cancel.</button>
+        <button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="disabel_confirm_button">{{confirm_text}}</button>
+    </div>
+</div>

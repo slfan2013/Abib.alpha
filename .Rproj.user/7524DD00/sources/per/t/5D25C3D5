@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1516644690680.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3072101033",
+    "id" : "5D25C3D5",
+    "lastKnownWriteTime" : 1518469029,
+    "last_content_update" : 1518469029,
+    "path" : "~/Github/Abib.alpha/R/two_way_boxplot_apply_to_all.R",
+    "project_path" : "R/two_way_boxplot_apply_to_all.R",
+    "properties" : {
+        "cursorPosition" : "59,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 11,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

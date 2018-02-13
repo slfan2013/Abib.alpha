@@ -1,0 +1,134 @@
+<!--
+*
+* INSPINIA - Responsive Admin Theme
+* Version 2.7
+*
+-->
+
+<!DOCTYPE html>
+<html ng-app="inspinia">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Page title set in pageTitle directive -->
+    <title page-title></title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font awesome -->
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Main Inspinia CSS files -->
+    <link href="css/animate.css" rel="stylesheet">
+    <link id="loadBefore" href="css/style.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="css/toaster.css" rel="stylesheet" />
+
+
+    <link rel="stylesheet" href="css/angular-material.min.css">
+    <!--<link rel="stylesheet" href="https://material.angularjs.org/1.1.5/docs.css">-->
+
+    <!--data table-->
+    <link href="css/dataTable.css" rel="stylesheet">
+    <link href="css/material.css" rel="stylesheet">
+    <link href="css/icons.css" rel="stylesheet">
+
+<style>
+  .vakata-context {
+     z-index: 1100
+  }
+  .md-open-menu-container {
+    z-index: 1100
+  }
+  .ng-scope._md.md-top.md-right.md-default-theme {
+    z-index:1100
+  }
+  .md-select-menu-container.md-active.md-clickable {
+    z-index:1100;
+  }
+</style>
+</head>
+
+<!-- ControllerAs syntax -->
+<!-- Main controller with serveral data used in Inspinia theme on diferent view -->
+<body ng-controller="MainCtrl as main" class="{{$state.current.data.specialClass}}" landing-scrollspy id="page-top">
+
+<!-- Main view  -->
+<div ui-view></div>
+
+<!-- jQuery and Bootstrap -->
+<script src="js/jquery/jquery-3.1.1.min.js"></script>
+<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="js/bootstrap/bootstrap.min.js"></script>
+<!-- MetsiMenu -->
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+<!-- SlimScroll -->
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Pace JS -->
+<script src="js/plugins/pace/pace.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+
+<script src="js/sweet alert2.min.js"></script>
+<!-- Main Angular scripts-->
+<script src="js/angular/angular.min.js"></script>
+  <script src="js/angular-animate.min.js"></script>
+  <script src="js/angular-aria.min.js"></script>
+  <script src="js/angular-messages.min.js"></script>
+  <script src="js/svg-assets-cache.js"></script>
+<script src="js/angular/angular-sanitize.js"></script>
+<script src="js/plugins/oclazyload/dist/ocLazyLoad.min.js"></script>
+<script src="js/angular-translate/angular-translate.min.js"></script>
+<script src="js/ui-router/angular-ui-router.min.js"></script>
+<script src="js/bootstrap/ui-bootstrap-tpls-1.1.2.min.js"></script>
+<script src="js/plugins/angular-idle/angular-idle.js"></script>
+<!-- Angular Material Library -->
+  <script src="js/angular-material.js">
+<!--
+ You need to include this script on any page that has a Google Map.
+ When using Google Maps on your own site you MUST signup for your own API key at:
+ https://developers.google.com/maps/documentation/javascript/tutorial#api_key
+ After your sign up replace the key in the URL below..
+-->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQTpXj82d8UpCi97wzo_nKXL7nYrd4G70"></script>
+
+
+<!--d3pie-->
+<script src="js/d3.min.js"></script>
+<!-- Toastr script -->
+<script src="js/toaster.js"></script>
+
+<!-- data table -->
+<script src="js/dataTable.helpers.js"></script>
+
+<!--my personal js functions-->
+<script src="js/myJS.js"></script>
+
+<!-- Anglar App Script -->
+<script src="js/app.js"></script>
+<script src="js/config.js"></script>
+<script src="js/translations.js"></script>
+<script src="js/directives.js"></script>
+<script src="js/controllers.js"></script>
+
+<!--OpenCPU-->
+<script src="js/opencpu-0.5.js"></script>
+
+<!--PouchDB-->
+<script src="js/pouchdb.min.js"></script>
+
+
+
+
+
+</body>
+</html>

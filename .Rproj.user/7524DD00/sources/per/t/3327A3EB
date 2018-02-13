@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1516644664151.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3242465196",
+    "id" : "3327A3EB",
+    "lastKnownWriteTime" : 1518469028,
+    "last_content_update" : 1518469028,
+    "path" : "~/Github/Abib.alpha/R/boxplot_.R",
+    "project_path" : "R/boxplot_.R",
+    "properties" : {
+        "cursorPosition" : "0,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

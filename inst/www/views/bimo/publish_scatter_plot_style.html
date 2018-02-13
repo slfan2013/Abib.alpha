@@ -1,0 +1,31 @@
+<form name="publish_scatter_plot_style" style="width:600px">
+  <md-content layout-gt-sm="column" layout-padding="">
+    <p class="md-subhead description">Which journal does your plot coming from?</p>
+    <md-input-container>
+      <label>Journal Name</label>
+      <input ng-model="style.header_title" required="" placeholder="e.g. nature">
+    </md-input-container>
+
+    <p class="md-subhead description">What is the function of your scatter plot? PCA? correlation plot? Or anything else?</p>
+    <md-input-container>
+      <label>Plot Function</label>
+      <input ng-model="style.title" required="" placeholder="e.g. PCA">
+    </md-input-container>
+
+    <p class="md-subhead description">Please describe the function of your plot.</p>
+    <md-input-container>
+      <label>Description</label>
+      <textarea ng-model="style.description" required="" placeholder="e.g. Scores plots by principal component analysis-linear discriminant analysis (PCA-LDA) derived from spectral dataset of the A549 cells exposed to CNPs at 0.1mg/L vs. vehicle control (90% confidence ellipsoids)."></textarea>
+    </md-input-container>
+
+    <p class="md-subhead description">Please provide the link where we can see the original plot.</p>
+    <md-input-container>
+      <label>Link</label>
+      <input ng-model="style.link" required="" placeholder="e.g. https://www.nature.com/articles/srep20207/figures/3">
+    </md-input-container>
+
+  </md-content>
+  <md-button type="submit" class="md-primary" ng-click="publish_scatter_plot_style.$valid  && submit_publish_scatter_plot_style()">Submit</md-button>
+</form>
+
+

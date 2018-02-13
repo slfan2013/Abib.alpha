@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1513194432902.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "308630237",
+    "id" : "887E4947",
+    "lastKnownWriteTime" : 1518469029,
+    "last_content_update" : 1518469029,
+    "path" : "~/Github/Abib.alpha/R/t_test.R",
+    "project_path" : "R/t_test.R",
+    "properties" : {
+        "cursorPosition" : "70,3",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

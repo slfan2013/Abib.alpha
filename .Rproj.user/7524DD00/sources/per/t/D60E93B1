@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1513186162898.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3160277566",
+    "id" : "D60E93B1",
+    "lastKnownWriteTime" : 1518469056,
+    "last_content_update" : 1518469056,
+    "path" : "~/Github/Abib.alpha/R/CALCULATE.R",
+    "project_path" : "R/CALCULATE.R",
+    "properties" : {
+        "cursorPosition" : "97,7",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,398 @@
+<div ng-controller="bimo_scatter_plot_controller">
+<div layout="row">
+  <div flex="100">
+    <form name="settings">
+      <fieldset class="standard">
+        <legend>Choose Dataset and Select X axis and Y axis</legend>
+        <div layout = "column">
+          <div layout="row">
+            <div flex="50">
+                <md-input-container class="md-block" flex="50">
+                  <label>Data set</label>
+                  <md-select placeholder="select a data set" ng-model="expression_id" name="expression_id" required="" ng-change = "upload_file()">
+                      <md-option ng-repeat="expression_id_option in expression_id_options" value="{{expression_id_option.expression_id}}" ng-init="index = $index">{{expression_id_option.expression_text}}
+                        <md-button class="md-icon-button" aria-label="Settings" ng-click="see_data_node(index)">
+                          <i class="fa fa-question-circle"></i>
+                        </md-button>
+                      </md-option>
+                  </md-select>
+                </md-input-container>
+            </div>
+            <div flex="50">
+            </div>
+          </div>
+
+          <div layout="row">
+            <div flex="50">
+              <md-input-container class="md-block" flex="80">
+                <label>X axis value</label>
+                <md-select ng-disabled="!show_axis" placeholder="X axis" ng-model="x_axis" style="min-width: 100px;" name="x_axis" required="">
+                    <md-option ng-repeat="x_axis_option in x_axis_options" value="{{x_axis_option}}" ng-disabled="x_axis_option == y_axis">{{x_axis_option}}
+                    </md-option>
+                </md-select>
+              </md-input-container>
+            </div>
+            <div flex="50">
+              <md-input-container class="md-block" flex="80">
+                <label>Y axis value</label>
+                <md-select ng-disabled="!show_axis" placeholder="Y axis" ng-model="y_axis" style="min-width: 100px;" name="y_axis" required="">
+                    <md-option ng-repeat="y_axis_option in y_axis_options" value="{{y_axis_option}}" ng-disabled="y_axis_option == x_axis">{{y_axis_option}}
+                    </md-option>
+                </md-select>
+              </md-input-container>
+            </div>
+          </div>
+          <div flex-gt-sm="50">
+            <md-checkbox md-no-ink="" aria-label="Read Variable by Column" ng-model="by_column" class="md-primary" ng-disabled="!show_axis" >
+              Variable by column
+            </md-checkbox>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Points Grouping</legend>
+        <div flex-gt-sm="50">
+          <md-checkbox md-no-ink="" aria-label="Read Variable by Column" ng-disabled="!show_axis" ng-model="group_data_into_tarces" class="md-primary">
+            group data into traces?
+          </md-checkbox>
+        </div>
+        <div layout="row">
+          <div flex="50">
+            <md-input-container class="md-block" flex="80">
+              <label>Grouping Data by Data Set</label>
+              <md-select placeholder="select a data set" ng-model="group_data"  ng-disabled="!show_axis || !group_data_into_tarces" ng-required="group_data_into_tarces">
+                  <md-option ng-repeat="expression_id_option in expression_id_options" value="{{expression_id_option.expression_id}}">{{expression_id_option.expression_text}}
+                  </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+          <div flex="50">
+            <md-input-container class="md-block" flex="80">
+              <label>Grouping Data by Column</label>
+              <md-select placeholder="select a column" ng-model="group_data_column"  ng-required="group_data_into_tarces" ng-disabled="!show_axis || !group_data_into_tarces">
+                  <md-option ng-repeat="group_data_column_option in group_data_column_options" value="{{group_data_column_option}}" >{{group_data_column_option}}
+                  </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Confidence Interval</legend>
+        <div layout="row">
+          <div flex-gt-sm="33">
+            <md-checkbox md-no-ink="" aria-label="Add confidence Interval " ng-disabled="!show_axis" ng-model="add_confidence_interval" class="md-primary">
+              Add Confidence Interval?
+            </md-checkbox>
+          </div>
+          <div flex-gt-sm="33">
+            <md-checkbox md-no-ink="" aria-label="Confidence Grouping " ng-disabled="!show_axis || !add_confidence_interval" ng-model="confidence_grouping" class="md-primary">
+              Add confidence interval according to Points Grouping?
+            </md-checkbox>
+          </div>
+          <div flex-gt-sm="33">
+            <md-switch class="md-primary" ng-disabled="!show_axis || !add_confidence_interval" aria-label="Type of Confidence Interval" ng-model="confidence_type" ng-true-value="'Polygon'" ng-false-value="'Ellipse'">
+              Confidence Interval Type: <b>{{confidence_type}}</b>
+            </md-switch>
+          </div>
+        </div>
+        <div layout="row">
+          <div flex="50">
+            <md-input-container class="md-block" flex="80">
+              <label>Grouping Ellipse by Dataset</label>
+              <md-select placeholder="select a data set to group ellipse" ng-model="ellipse_group_data"  ng-disabled="!show_axis || !add_confidence_interval || confidence_grouping" ng-required="add_confidence_interval && !confidence_grouping">
+                  <md-option ng-repeat="expression_id_option in expression_id_options" value="{{expression_id_option.expression_id}}">{{expression_id_option.expression_text}}
+                  </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+          <div flex="50">
+            <md-input-container class="md-block" flex="80">
+              <label>Grouping Data by Column</label>
+              <md-select placeholder="select a column to group ellipse" ng-model="ellipse_group_data_column"  ng-required="add_confidence_interval && !confidence_grouping" ng-disabled="!show_axis || !add_confidence_interval || confidence_grouping">
+                  <md-option ng-repeat="ellipse_group_data_column_option in ellipse_group_data_column_options" value="{{ellipse_group_data_column_option}}" >{{ellipse_group_data_column_option}}
+                  </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+        </div>
+
+      </fieldset>
+      <md-button type='submit' class="md-raised md-primary" ng-click="settings.$valid && submit_data_setting()" ng-show="show_submit_data_setting_button">Submit Settings</md-button>
+    </form>
+
+
+
+
+  </div>
+
+</div>
+
+
+
+
+
+
+  <div layout="row" layout-padding="" ng-show="show_result">
+    <div flex="25">
+      <uib-accordion close-others="true">
+        <uib-accordion-group heading="Main Layout">
+          width: <input type="number" ng-model="plot_layout.width" min="0" step="20"><br />
+          height: <input type="number" ng-model="plot_layout.height" min="0" step="20"><br />
+          margin: <a class="pull-right" ng-model="plot_layout.margin_open" ng-click="plot_layout.margin_open = !plot_layout.margin_open"><span ng-show="!plot_layout.margin_open">show more</span><span ng-show="plot_layout.margin_open">show less</span></a><br />
+          <div ng-show="plot_layout.margin_open">
+            margin-left: <input type="number" ng-model="plot_layout.margin.l" min="0"/><br />
+            margin-right: <input type="number" ng-model="plot_layout.margin.r"  min="0"/><br />
+            margin-top: <input type="number" ng-model="plot_layout.margin.t"  min="0"/><br />
+            margin-bottom: <input type="number" ng-model="plot_layout.margin.b"  min="0"/><br />
+            margin-pad: <input type="number" ng-model="plot_layout.margin.pad"  min="0"/>
+          </div>
+          paper background color: <input type="color" ng-model="plot_layout.paper_bgcolor"/><br />
+          plot background color: <input type="color" ng-model="plot_layout.plot_bgcolor"/><br />
+        </uib-accordion-group>
+        <uib-accordion-group heading="Title">
+          title: <input type="text" ng-model="plot_layout.title"><br />
+          title font family: <select ng-model="plot_layout.titlefont.family" options-attribute="family_options"
+    options-attribute-transform="{ 'style': 'font-family: ' + $data }">
+            <option ng-repeat="family_option in family_options" value="{{family_option}}">{{family_option}}</option>
+          </select><br/>
+          title font size: <input type="number" ng-model="plot_layout.titlefont.size"><br />
+          title font color: <input type="color" ng-model="plot_layout.titlefont.color" />
+        </uib-accordion-group>
+        <uib-accordion-group heading="Legend">
+          showlegend:<input type="checkbox" ng-model="plot_layout.showlegend"><br />
+          bgcolor: <input type="color" ng-model="plot_layout.legend.bgcolor"><br />
+          bordercolor: <input type="color" ng-model="plot_layout.legend.bordercolor"><br />
+          borderwidth: <input type="number" min = "0" step="1" ng-model="plot_layout.legend.borderwidth"><br />
+          font: <a class="pull-right" ng-model="plot_layout.legend.font_open" ng-click="plot_layout.legend.font_open = !plot_layout.legend.font_open"><span ng-show="!plot_layout.legend.font_open">show more</span><span ng-show="plot_layout.legend.font_open">show less</span></a><br />
+          <div ng-show="plot_layout.legend.font_open">
+            family: <select ng-model="plot_layout.legend.font.family" options-attribute="family_options"
+      options-attribute-transform="{ 'style': 'font-family: ' + $data }">
+                <option ng-repeat="family_option in family_options" value="{{family_option}}">{{family_option}}</option>
+              </select><br/>
+            size: <input type="number" min="0" step="1" ng-model="plot_layout.legend.font.size"><br />
+            color: <input type="color" ng-model="plot_layout.legend.font.color"><br />
+          </div>
+          orientation: <select ng-model="plot_layout.legend.orientation">
+            <option value="v">vertical</option>
+            <option value="h">horizontal</option>
+          </select><br />
+          tracegroupgap: <input type="number" min="0" step="1" ng-model="plot_layout.legend.tracegroupgap"><br />
+          x: <input type="number" min="-2" max="3" step="0.01" ng-model="plot_layout.legend.x"><br />
+          xanchor: <select ng-model="plot_layout.legend.xanchor">
+            <option value="auto">auto</option>
+            <option value="left">left</option>
+            <option value="center">center</option>
+            <option value="right">right</option>
+          </select><br />
+          y: <input type="number" min="-2" max="3" step="0.01" ng-model="plot_layout.legend.y"><br />
+          yanchor: <select ng-model="plot_layout.legend.yanchor">
+            <option value="auto">auto</option>
+            <option value="top">top</option>
+            <option value="middle">middle</option>
+            <option value="bottom">bottom</option>
+          </select><br />
+        </uib-accordion-group>
+        <uib-accordion-group heading="x Axis">
+          visible: <input type="checkbox" ng-model="plot_layout.xaxis.visible"><br />
+          range: <input type="number" ng-model="plot_layout.xaxis.xaxis_range_min" ng-change="update_range()"> to <input ng-change="update_range()" type="number" ng-model="plot_layout.xaxis.xaxis_range_max"><br />
+          <!--color: <input type="color" ng-model="plot_layout.xaxis.color"><br />-->
+          title: <input type="text" ng-model="plot_layout.xaxis.title"><br />
+          title font: <a class="pull-right" ng-model="plot_layout.xaxis.titlefont_open" ng-click="plot_layout.xaxis.titlefont_open = !plot_layout.xaxis.titlefont_open"><span ng-show="!plot_layout.xaxis.titlefont_open">show more</span><span ng-show="plot_layout.xaxis.titlefont_open">show less</span></a><br />
+          <div ng-show="plot_layout.xaxis.titlefont_open">
+            title font family: <select ng-model="plot_layout.xaxis.titlefont.family" options-attribute="family_options"
+    options-attribute-transform="{ 'style': 'font-family: ' + $data }">
+              <option ng-repeat="family_option in family_options" value="{{family_option}}">{{family_option}}</option>
+            </select><br/>
+            title font size: <input type="number" ng-model="plot_layout.xaxis.titlefont.size"><br />
+            title font color: <input type="color" ng-model="plot_layout.xaxis.titlefont.color"><br />
+          </div>
+          tickmode: <select ng-model="plot_layout.xaxis.tickmode" disabled><option value="auto">Auto</option><option value="array">custom</option></select><br />
+          <div ng-show="plot_layout.xaxis.tickmode == 'auto'">
+            max n ticks: <input type="number" ng-model="plot_layout.xaxis.nticks"><br />
+          </div>
+          <div ng-show="plot_layout.xaxis.tickmode == 'array'">
+            tick values: <input type="text" ng-model="plot_layout.xaxis.nticks">
+            tick texts: <input type="text" ng-model="plot_layout.xaxis.ticktext">
+          </div>
+          ticks position: <select ng-model="plot_layout.xaxis.ticks"><option value="inside">inside</option><option value="outside">outside</option><option value="">none</option></select><br />
+          tick length: <input type="number" ng-model="plot_layout.xaxis.ticklen"><br />
+          tick width: <input type="number" ng-model="plot_layout.xaxis.tickwidth"><br />
+          tick color: <input type="color" ng-model="plot_layout.xaxis.tickcolor"><br />
+          show tick labels: <input type="checkbox" ng-model="plot_layout.xaxis.showticklabels"><a  ng-show="plot_layout.xaxis.showticklabels" class="pull-right" ng-model="plot_layout.xaxis.showticklabels_open" ng-click="plot_layout.xaxis.showticklabels_open = !plot_layout.xaxis.showticklabels_open"><span ng-show="!plot_layout.xaxis.showticklabels_open">show more</span><span ng-show="plot_layout.xaxis.showticklabels_open">show less</span></a><br />
+          <div ng-show="plot_layout.xaxis.showticklabels && plot_layout.xaxis.showticklabels_open">
+          tick font family: <select ng-model="plot_layout.xaxis.tickfont.family" options-attribute="family_options"
+    options-attribute-transform="{ 'style': 'font-family: ' + $data }"><option ng-repeat="family_option in family_options" value="{{family_option}}">{{family_option}}</option></select><br />
+          tick font size: <input type="number" ng-model="plot_layout.xaxis.tickfont.size"><br />
+          tick font color: <input type="color" ng-model="plot_layout.xaxis.tickfont.color"><br />
+          </div>
+          tick angle: <input type="number" ng-model="plot_layout.xaxis.tickangle"><br />
+          show axis line: <input type="checkbox" ng-model="plot_layout.xaxis.showline"><br />
+          <div ng-show="plot_layout.xaxis.showline">
+            axis line color: <input type="color" ng-model="plot_layout.xaxis.linecolor"><br />
+            axis line width: <input type="number" ng-model="plot_layout.xaxis.linewidth"><br />
+            axis line position: <select ng-model="plot_layout.xaxis.side"><option value="bottom">bottom</option><option value="top">top</option></select>
+          </div>
+          show grid: <input type="checkbox" ng-model="plot_layout.xaxis.showgrid"><br />
+          <div ng-show="plot_layout.xaxis.showgrid">
+            grid color: <input type="color" ng-model="plot_layout.xaxis.gridcolor"><br />
+            grid width: <input type="number" ng-model="plot_layout.xaxis.gridwidth"><br />
+          </div>
+          show zero line: <input type="checkbox" ng-model="plot_layout.xaxis.zeroline"><br />
+          <div ng-show="plot_layout.xaxis.zeroline">
+            zero line color: <input type="color" ng-model="plot_layout.xaxis.zerolinecolor"><br />
+            zero line width: <input type="number" ng-model="plot_layout.xaxis.zerolinewidth"><br />
+          </div>
+          mirror: <select ng-model="plot_layout.xaxis.mirror_unformated" ng-change="format_mirror_x()">
+            <option value="true">mirror line</option>
+            <option value="ticks">mirror ticks</option>
+            <option value="false">no mirror</option>
+          </select>
+        </uib-accordion-group>
+        <uib-accordion-group heading="y Axis">
+          visible: <input type="checkbox" ng-model="plot_layout.yaxis.visible"><br />
+          range: <input type="number" ng-model="plot_layout.yaxis.yaxis_range_min" ng-change="update_range()"> to <input type="number" ng-model="plot_layout.yaxis.yaxis_range_max" ng-change="update_range()"><br />
+          <!--color: <input type="color" ng-model="plot_layout.yaxis.color"><br />-->
+          title: <input type="text" ng-model="plot_layout.yaxis.title"><br />
+          title font: <a class="pull-right" ng-model="plot_layout.yaxis.titlefont_open" ng-click="plot_layout.yaxis.titlefont_open = !plot_layout.yaxis.titlefont_open"><span ng-show="!plot_layout.yaxis.titlefont_open">show more</span><span ng-show="plot_layout.yaxis.titlefont_open">show less</span></a><br />
+          <div ng-show="plot_layout.yaxis.titlefont_open">
+            title font family: <select ng-model="plot_layout.yaxis.titlefont.family" options-attribute="family_options"
+    options-attribute-transform="{ 'style': 'font-family: ' + $data }">
+              <option ng-repeat="family_option in family_options" value="{{family_option}}">{{family_option}}</option>
+            </select><br/>
+            title font size: <input type="number" ng-model="plot_layout.yaxis.titlefont.size"><br />
+            title font color: <input type="color" ng-model="plot_layout.yaxis.titlefont.color"><br />
+          </div>
+          tickmode: <select ng-model="plot_layout.yaxis.tickmode" disabled><option value="auto">Auto</option><option value="array">custom</option></select><br />
+          <div ng-show="plot_layout.yaxis.tickmode == 'auto'">
+            max n ticks: <input type="number" ng-model="plot_layout.yaxis.nticks"><br />
+          </div>
+          <div ng-show="plot_layout.yaxis.tickmode == 'array'">
+            tick values: <input type="text" ng-model="plot_layout.yaxis.nticks">
+            tick texts: <input type="text" ng-model="plot_layout.yaxis.ticktext">
+          </div>
+          ticks position: <select ng-model="plot_layout.yaxis.ticks"><option value="inside">inside</option><option value="outside">outside</option><option value="">none</option></select><br />
+          tick length: <input type="number" ng-model="plot_layout.yaxis.ticklen"><br />
+          tick width: <input type="number" ng-model="plot_layout.yaxis.tickwidth"><br />
+          tick color: <input type="color" ng-model="plot_layout.yaxis.tickcolor"><br />
+          show tick labels: <input type="checkbox" ng-model="plot_layout.yaxis.showticklabels"><a  ng-show="plot_layout.yaxis.showticklabels" class="pull-right" ng-model="plot_layout.yaxis.showticklabels_open" ng-click="plot_layout.yaxis.showticklabels_open = !plot_layout.yaxis.showticklabels_open"><span ng-show="!plot_layout.yaxis.showticklabels_open">show more</span><span ng-show="plot_layout.yaxis.showticklabels_open">show less</span></a><br />
+          <div ng-show="plot_layout.yaxis.showticklabels && plot_layout.yaxis.showticklabels_open">
+          tick font family: <select ng-model="plot_layout.yaxis.tickfont.family" options-attribute="family_options"
+    options-attribute-transform="{ 'style': 'font-family: ' + $data }"><option ng-repeat="family_option in family_options" value="{{family_option}}">{{family_option}}</option></select><br />
+          tick font size: <input type="number" ng-model="plot_layout.yaxis.tickfont.size"><br />
+          tick font color: <input type="color" ng-model="plot_layout.yaxis.tickfont.color"><br />
+          </div>
+          tick angle: <input type="number" ng-model="plot_layout.yaxis.tickangle"><br />
+          show axis line: <input type="checkbox" ng-model="plot_layout.yaxis.showline"><br />
+          <div ng-show="plot_layout.yaxis.showline">
+            axis line color: <input type="color" ng-model="plot_layout.yaxis.linecolor"><br />
+            axis line width: <input type="number" ng-model="plot_layout.yaxis.linewidth"><br />
+            axis line position: <select ng-model="plot_layout.yaxis.side"><option value="left">left</option><option value="right">right</option></select>
+          </div>
+          show grid: <input type="checkbox" ng-model="plot_layout.yaxis.showgrid"><br />
+          <div ng-show="plot_layout.yaxis.showgrid">
+            grid color: <input type="color" ng-model="plot_layout.yaxis.gridcolor"><br />
+            grid width: <input type="number" ng-model="plot_layout.yaxis.gridwidth"><br />
+          </div>
+          show zero line: <input type="checkbox" ng-model="plot_layout.yaxis.zeroline"><br />
+          <div ng-show="plot_layout.yaxis.zeroline">
+            zero line color: <input type="color" ng-model="plot_layout.yaxis.zerolinecolor"><br />
+            zero line width: <input type="number" ng-model="plot_layout.yaxis.zerolinewidth"><br />
+          </div>
+          mirror: <select ng-model="plot_layout.yaxis.mirror_unformated" ng-change="format_mirror_y()">
+            <option value="true">mirror line</option>
+            <option value="ticks">mirror ticks</option>
+            <option value="false">no mirror</option>
+          </select>
+        </uib-accordion-group>
+        <uib-accordion-group ng-repeat="data in plot_data" heading="{{group_levels[$index]}}">
+          name: <input type="text" ng-model="data.name"><br />
+          mode: <select ng-model="data.mode">
+            <option value="markers">markers</option>
+            <option value="text">label</option>
+            <option value="markers+text">markers+label</option>
+          </select><br />
+          <div ng-show="data.mode.indexOf('text')!==-1">
+            textposition: <select ng-model="data.textposition">
+              <option ng-repeat="textposition_option in textposition_options" value="{{textposition_option}}">{{textposition_option}}</option>
+            </select><br />
+            textfont: <a class="pull-right" ng-model="data.textfont_open" ng-click="data.textfont_open = !data.textfont_open"><span ng-show="!data.textfont_open">show more</span><span ng-show="data.textfont_open">show less</span></a><br />
+            <div ng-show="data.textfont_open">
+              family:<select ng-model="data.textfont.family" options-attribute="family_options"
+      options-attribute-transform="{ 'style': 'font-family: ' + $data }">
+                <option ng-repeat="family_option in family_options" value="{{family_option}}">{{family_option}}</option>
+              </select><br />
+              size: <input type="number" ng-model="data.textfont.size" min="0" step="1"><br />
+              color: <input type="color" ng-model="data.textfont.color"><br />
+            </div>
+          </div>
+          symbol: <select ng-model="data.marker.symbol"><option ng-repeat="symbol_option in symbol_options" value="{{symbol_option}}">{{symbol_option}}</option></select><br />
+          color: <input type="color" ng-model="data.marker.color"><br />
+          opacity: <input type="number" min="0" max="1" step="0.05" ng-model="data.marker.opacity"><br />
+          size: <input type="number" min="0" step="1" ng-model="data.marker.size">
+          <div ng-show="data.marker.symbol.indexOf('-open')===-1">
+            border width: <input type="number" min="0"  ng-model="data.marker.line.width"><br />
+            border color: <input type="color" ng-model="data.marker.line.color">
+          </div>
+          fill: <select ng-model="data.fill">
+            <option ng-repeat="fill_option in fill_options" value="{{fill_option}}">{{fill_option}}</option>
+          </select><br />
+          <div ng-show="data.fill !== 'none'">
+            fillcolor: <input type="color" ng-model="data.fillcolor">
+          </div>
+          legendgroup: <input type="text" ng-model="data.legendgroup">
+
+        </uib-accordion-group>
+        <uib-accordion-group ng-repeat="data in plot_data_ellipse" heading="{{group_levels[$index]}} - ellipse">
+          name: <input type="text" ng-model="data.name"><br />
+          color: <input type="color" ng-model="data.line.color"><br />
+          line width: <input type="number" min="0" ng-model="data.line.width"><br />
+          fill: <select ng-model="data.fill">
+            <option ng-repeat="fill_option in fill_options" value="{{fill_option}}">{{fill_option}}</option>
+          </select><br />
+          <div ng-show="data.fill !== 'none'">
+            fill color: <input type="color" ng-change="plot_data_ellipse_fillcolor_transformation($index)" ng-model="data.plot_data_ellipse_fillcolor"><br />
+            fill opacity: <input type="number" min="0" step="0.05" max="1" ng-model="data.plot_data_ellipse_fillcolor_opacity"  ng-change="plot_data_ellipse_fillcolor_transformation($index)"><br />
+          </div>
+          legendgroup: <input type="text" ng-model="data.legendgroup"><br />
+          showlegend: <input type="checkbox" ng-model="data.showlegend"><br />
+          show ellipse: <input type="checkbox" ng-model="data.show_ellipse" ng-change="toggle_ellipse($index)"><br />
+        </uib-accordion-group>
+      </uib-accordion>
+      <button ng-click="save_attribute()">save the style</button>
+      <button ng-click="publish_attribute()" ng-hide="admin">publish the style</button>
+      <button ng-click="publish_attribute_admin()" ng-show="admin">publish the style as Admin</button>
+      <button ng-click="load_attribute()">load style</button>
+
+
+    </div>
+    <div flex="75">
+      <div id="plot"></div>
+      <button ng-click="confirm_save_plot()">save the plot to project</button>
+    </div>
+  </div>
+
+
+
+
+<div id="saving_plot_div" style="display:none;"> </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

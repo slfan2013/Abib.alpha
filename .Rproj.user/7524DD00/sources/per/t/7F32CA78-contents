@@ -1,0 +1,129 @@
+create_new_project = function(
+  path = "C:\\Users\\Sili\\Downloads\\Book1.xlsx"
+){
+  pacman::p_load(data.table)
+
+  # read data and split data into sample_info, metabolite_info, and expression_data
+  data = readxl::read_excel(path, col_names = FALSE)
+  data = data.table(data)
+
+
+  sample_col_range = min(which(!is.na(data[1,]))):ncol(data)
+  sample_row_range = 1:min(which(!is.na(data[[1]])))
+  compound_col_range = 1:(min(which(!is.na(data[1,]))))
+  compound_row_range = (min(which(!is.na(data[[1]])))):nrow(data)
+
+  p = t(data[sample_row_range,sample_col_range,with=F])
+  colnames(p) = p[1,]
+  p = p[-1,]
+  p = p[,c(ncol(p),1:(ncol(p)-1))]
+  p = data.table(p)
+  p = sapply(p, function(x){
+    if(sum(is.na(as.numeric(x)))==0){
+      as.numeric(x)
+    }else{
+      x
+    }
+  }, simplify = F)
+  p = as.data.table(p)
+  colnames(p) = make.unique(colnames(p), sep = "_")
+  if(!"label"%in%colnames(p)){
+    stop("Cannot find 'label' in your data. Please check the data format requirement.")
+  }
+  if(sum(is.na(p$label))>0){
+    p$label[is.na(p$label)] = "na"
+  }
+  if(sum(duplicated(p$label)>0)){
+    p$label = make.unique(p$label, sep = "_")
+  }
+
+  data.table::fwrite(p, "sample_info.csv")
+  jsonlite::write_json(p,"sample_info.JSON")
+
+
+  f = data[compound_row_range,compound_col_range,with=F]
+  colnames(f) = as.character(f[1,])
+  f = f[-1,]
+  f = f[,c(ncol(f),1:(ncol(f)-1)),with=F]
+  f = sapply(f, function(x){
+    if(sum(is.na(as.numeric(x)))==0){
+      as.numeric(x)
+    }else{
+      x
+    }
+  }, simplify = F)
+  f = as.data.table(f)
+  colnames(f) = make.unique(colnames(f), sep = "_")
+  if(sum(is.na(f$label))>0){
+    f$label[is.na(f$label)] = "na"
+  }
+  if(sum(duplicated(f$label)>0)){
+    f$label = make.unique(f$label, sep = "_")
+  }
+  data.table::fwrite(f, "metabolite_info.csv")
+  jsonlite::write_json(f,"metabolite_info.JSON")
+
+  e = data[compound_row_range, sample_col_range, with = F]
+  colnames(e) = as.character(e[1,])
+  colnames(e)[is.na(colnames(e))] = "na"
+  e = e[-1,]
+  e = data.table(label = e$label, sapply(e[,-1,with=F], function(x){
+    as.numeric(x)
+  }))
+  colnames(e) = make.unique(colnames(e), sep = "_")
+  e$label[is.na(e$label)] = "na"
+  e$label = make.unique(e$label)
+  colnames(e) = make.unique(colnames(e))
+
+  sample_info_column_name = colnames(p)
+  sample_info = sapply(p,unique, simplify = FALSE)
+  sample_info_length = sapply(p, function(x) length(unique(x)), simplify = FALSE)
+  sample_info_class = sapply(p, class, simplify = FALSE)
+
+
+
+  compound_info_column_name = colnames(f)
+  compound_info = sapply(f,unique, simplify = FALSE)
+  compound_info_length = sapply(f, function(x) length(unique(x)), simplify = FALSE)
+  compound_info_class = sapply(f, class, simplify = FALSE)
+
+
+  # summarizing sample info to be used in the project detail
+  summarizing = ez::ezPrecis(p)
+  summarizing_table = data.table(rownames(summarizing),summarizing)
+  colnames(summarizing_table) = c("column_name",colnames(summarizing_table)[-1])
+  sample_info_table_JSON = jsonlite::toJSON(summarizing_table)
+  # summarizing compound info to be used in the project detail
+  summarizing = ez::ezPrecis(f)
+  summarizing_table = data.table(rownames(summarizing),summarizing)
+  colnames(summarizing_table) = c("column_name",colnames(summarizing_table)[-1])
+  compound_info_table_JSON = jsonlite::toJSON(summarizing_table)
+
+
+  fwrite(p,"p.csv")
+  fwrite(f,"f.csv")
+  fwrite(e,"e.csv")
+
+
+  return(list(success = TRUE,
+              sample_info_column_name = sample_info_column_name,
+              compound_info_column_name = compound_info_column_name,
+              sample_info = sample_info,
+              compound_info = compound_info,
+              sample_info_length = sample_info_length,
+              compound_info_length = compound_info_length,
+              sample_info_class = sample_info_class,
+              compound_info_class = compound_info_class,
+
+              nrow_e = nrow(e),
+              ncol_e = ncol(e),
+              nrow_f = nrow(f),
+              ncol_f = ncol(f),
+              nrow_p = nrow(p),
+              ncol_p = ncol(p),
+
+              sample_info_table_JSON = sample_info_table_JSON,
+              compound_info_table_JSON = compound_info_table_JSON
+              ))
+
+}

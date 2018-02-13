@@ -1,0 +1,185 @@
+<div data-ng-controller="subsettingCtrl">
+  <div class="row">
+    <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Input file for <span>{{$state.current.data.module_name}}</span></h5>
+                    <div ibox-tools></div>
+                </div>
+                <div class="ibox-content">
+                  <div class="row">
+                  <div class="col-lg-4">
+                    <div layout="row">
+                        <md-input-container>
+                        <label>Data Set for subset</label>
+                        <md-select placeholder="select a data set" ng-model="expression_id" ng-change="change_expression_id()" style="min-width: 200px;" name="expression_id" required="">
+                            <md-option ng-repeat="expression_id_option in expression_id_options" value="{{expression_id_option.expression_id}}" ng-init="index = $index">{{expression_id_option.expression_text}}
+                              <md-button class="md-icon-button" aria-label="Settings" ng-click="see_data_node(index)">
+                                <i class="fa fa-question-circle"></i>
+                              </md-button>
+                            </md-option>
+                        </md-select>
+                            <div ng-messages="input.expression_id.$error">
+                              <div ng-message="required">This is required.</div>
+                            </div>
+                        </md-input-container>
+                      </div>
+                      <div layout="row">
+                        The data contains {{before_nrow}} rows and {{before_ncol}} columns.
+                      </div>
+                      <div layout="row">
+                        <md-input-container>
+                          <md-checkbox md-no-ink="" aria-label="Subset by samples" ng-model="subset_by_samples" class="md-primary">Subset by samples</md-checkbox>
+                        </md-input-container>
+                      </div>
+                      <div layout="row" ng-show = "subset_by_samples">
+                        <md-input-container>
+                        <label>criterion data</label>
+                        <md-select placeholder="select a criterion data set" ng-model="sample_related_result_id" ng-change="change_sample_related_result_id()" style="min-width: 200px;" name="sample_related_result_id" required="">
+                            <md-option ng-repeat="sample_related_result_option in sample_related_result_options" value="{{sample_related_result_option.sample_related_result_id}}" ng-init="index = $index">{{sample_related_result_option.sample_related_result_text}}
+                              <md-button class="md-icon-button" aria-label="Settings" ng-click="see_data_node(index)">
+                                <i class="fa fa-question-circle"></i>
+                              </md-button>
+                            </md-option>
+                        </md-select>
+                        </md-input-container>
+                        </div>
+                        <div layout="row" ng-show = "subset_by_samples">
+                          <md-list>
+                          <md-list-item class="md-2-line" ng-repeat="sample_column_option_criterion in sample_column_option_criterions" style="padding: 0px">
+
+                            <md-input-container>
+                              <label>criterion column </label>
+                            <md-select placeholder="select a criterion column" ng-model="sample_column_option_criterion.column" >
+                              <md-option ng-repeat="text in sample_column_option_criterion.text" value="{{text}}">{{text}}
+                              </md-option>
+                          </md-select>
+                          </md-input-container>
+                          <md-input-container >
+                            <label>criterion values </label>
+                            <md-select ng-model="sample_column_option_criterion.selected" multiple="" ng-if="sample_column_option_criterion.type[sample_column_option_criterion.column]=='character'">
+                                <md-option ng-repeat="value in sample_column_option_criterion.values[sample_column_option_criterion.column]" value="{{value}}" >{{value}}</md-option>
+                            </md-select>
+                            </md-input-container>
+                          <md-input-container >
+                            <label>Mininum</label>
+                            <input type="number" ng-model="sample_column_option_criterion.min" min="sample_column_option_criterion.number_options[sample_column_option_criterion.column].min" max="sample_column_option_criterion.number_options[sample_column_option_criterion.column].max" step="sample_column_option_criterion.number_options[sample_column_option_criterion.column].by" ng-init="sample_column_option_criterion.min = sample_column_option_criterion.number_options[sample_column_option_criterion.column].min" ng-if="sample_column_option_criterion.type[sample_column_option_criterion.column]=='number'">
+                            </md-input-container >
+                            <md-input-container >
+                            <label>Maximun</label>
+                            <input type="number" ng-model="sample_column_option_criterion.max" min="sample_column_option_criterion.number_options[sample_column_option_criterion.column].min" max="sample_column_option_criterion.number_options[sample_column_option_criterion.column].max" step="sample_column_option_criterion.number_options[sample_column_option_criterion.column].by" ng-init="sample_column_option_criterion.max = sample_column_option_criterion.number_options[sample_column_option_criterion.column].max" ng-if="sample_column_option_criterion.type[sample_column_option_criterion.column]=='number'">
+</md-input-container >
+<div layout='row'>
+<md-button class="md-secondary md-icon-button" ng-click="add_sample_criterion()" ng-show="$last" aria-label="add_criterion">
+                            <i class="fa fa-plus-square-o"></i>
+                          </md-button>
+                          <md-button class="md-secondary md-icon-button" ng-click="remove_sample_criterion()" ng-show="$last && !$first" aria-label="remove_criterion">
+                            <i class="fa fa-minus-square-o"></i>
+                          </md-button>
+</div>
+
+                          </md-list-item>
+                          </md-list>
+
+                        </div>
+                      <div layout="row">
+                        <md-input-container>
+                          <md-checkbox md-no-ink="" aria-label="Subset by compounds" ng-model="subset_by_compounds" class="md-primary">Subset by compounds</md-checkbox>
+                        </md-input-container>
+                      </div>
+                      <div layout="row" ng-show = "subset_by_compounds">
+                        <md-input-container>
+                        <label>criterion data</label>
+                        <md-select placeholder="select a criterion data set" ng-model="compound_related_result_id" ng-change="change_compound_related_result_id()" style="min-width: 200px;" name="compound_related_result_id" required="">
+                            <md-option ng-repeat="compound_related_result_option in compound_related_result_options" value="{{compound_related_result_option.compound_related_result_id}}" ng-init="index = $index">{{compound_related_result_option.compound_related_result_text}}
+                              <md-button class="md-icon-button" aria-label="Settings" ng-click="see_data_node(index)">
+                                <i class="fa fa-question-circle"></i>
+                              </md-button>
+                            </md-option>
+                        </md-select>
+                        </md-input-container>
+                        </div>
+                        <div layout="row" ng-show = "subset_by_compounds">
+                          <md-list>
+                          <md-list-item class="md-2-line" ng-repeat="compound_column_option_criterion in compound_column_option_criterions" style="padding: 0px">
+
+                            <md-input-container>
+                              <label>criterion column </label>
+                            <md-select placeholder="select a criterion column" ng-model="compound_column_option_criterion.column" >
+                              <md-option ng-repeat="text in compound_column_option_criterion.text" value="{{text}}">{{text}}
+                              </md-option>
+                          </md-select>
+                          </md-input-container>
+                          <md-input-container >
+                            <label>criterion values </label>
+                            <md-select ng-model="compound_column_option_criterion.selected" multiple="" ng-if="compound_column_option_criterion.type[compound_column_option_criterion.column]=='character'">
+                                <md-option ng-repeat="value in compound_column_option_criterion.values[compound_column_option_criterion.column]" value="{{value}}" >{{value}}</md-option>
+                            </md-select>
+                            </md-input-container>
+                          <md-input-container >
+                            <label>Mininum</label>
+                            <input type="number" ng-model="compound_column_option_criterion.min" min="compound_column_option_criterion.number_options[compound_column_option_criterion.column].min" max="compound_column_option_criterion.number_options[compound_column_option_criterion.column].max" step="compound_column_option_criterion.number_options[compound_column_option_criterion.column].by" ng-init="compound_column_option_criterion.min = compound_column_option_criterion.number_options[compound_column_option_criterion.column].min" ng-if="compound_column_option_criterion.type[compound_column_option_criterion.column]=='number'">
+                            </md-input-container >
+                            <md-input-container >
+                            <label>Maximun</label>
+                            <input type="number" ng-model="compound_column_option_criterion.max" min="compound_column_option_criterion.number_options[compound_column_option_criterion.column].min" max="compound_column_option_criterion.number_options[compound_column_option_criterion.column].max" step="compound_column_option_criterion.number_options[compound_column_option_criterion.column].by" ng-init="compound_column_option_criterion.max = compound_column_option_criterion.number_options[compound_column_option_criterion.column].max" ng-if="compound_column_option_criterion.type[compound_column_option_criterion.column]=='number'">
+</md-input-container >
+<div layout='row'>
+                          <md-button class="md-secondary md-icon-button" ng-click="add_compound_criterion()" ng-show="$last" aria-label="add_criterion">
+                            <i class="fa fa-plus-square-o"></i>
+                          </md-button>
+                          <md-button class="md-secondary md-icon-button" ng-click="remove_compound_criterion()" ng-show="$last && !$first" aria-label="remove_criterion">
+                            <i class="fa fa-minus-square-o"></i>
+                          </md-button>
+</div>
+
+
+                          </md-list-item>
+                          </md-list>
+                        </div>
+
+
+                        <div layout='row'>
+                          <md-button class="md-raised md-primary" ng-click="submit()">Submit</md-button>
+                        </div>
+
+
+                  </div>
+                  <div class="col-lg-8">
+                    <dtable ng-if="before_table_ready" options="before_table_options" rows="before_table_data"  class="material" style="min-height:550px;" ></dtable>
+                  </div>
+                  </div>
+
+                </div>
+            </div>
+        </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Subsetting criterion and Preview</h5>
+                    <div ibox-tools></div>
+                </div>
+                <div class="ibox-content">
+                  <div class='row'>
+                  <div class="col-lg-4">
+                      <div layout="row">
+                        The data contains {{after_nrow}} rows and {{after_ncol}} columns.
+                      </div>
+                  </div>
+                  <div class="col-lg-8">
+                    <dtable ng-if="after_table_ready" options="after_table_options" rows="after_table_data"  class="material" style="min-height:550px;" ></dtable>
+                  </div>
+                  </div>
+                  <div layout='row'>
+                    <md-button class="md-raised md-primary" ng-click="confirm_save($event)" ng-show="show_save" ng-disabled="saving">Save</md-button>
+                  </div>
+              </div>
+            </div>
+
+
+        </div>
+  </div>
+
+</div>
